@@ -1,0 +1,197 @@
+import sys
+import time
+import tkinter
+
+class ATM():
+    def __init__(self,name,pin,card_no,balance):
+        self.name = name
+        self.pin = pin
+        self.card_no = card_no
+        self.balance = balance    
+        self.trans_history = ""
+    def get_user(self):
+        no_of_tires = 1
+        while no_of_tires < 4:
+            no_of_tires += 1
+            try:
+                     
+                inp_card_no = int(input("Enter Your Card Number: "))
+                if inp_card_no == self.card_no :
+                    
+                    break
+                else:
+                        print("Card Number Not Recognized. Please Try Again")
+            except:
+                print("Card Number Not Recognized. Please Try Again")
+        if no_of_tires > 3:
+            print("You Have ran out of attempts. Please Try Again Later ")
+            sys.exit()
+    def get_pin_code(self):
+        no_of_tries = 1
+        while no_of_tries < 4:
+            no_of_tries += 1
+            try:
+                pin_code = int(input(f"Enter Your Pin Code: ").strip())
+                if pin_code == self.pin:
+                    print(f"Welcome {self.name}")
+                    break
+                else:
+                    print("Incorrect Pin. Please Try Again")
+            except:
+                print("Incorrect Pin. Please Try Again")
+                continue
+        if no_of_tries > 3:
+            print("You Have Ran Out Of Attempts. Please Try Again Later ")
+            sys.exit()    
+        
+    def prompt(self):
+        print("What Would You Like To Do: ")
+        print("1: Withdraw\n2: Deposit\n3: Transfer\n4: Check Transfer History\n5: Check Balance\n6: Get Account Information")
+        print("7: Change Pin Code\n8: Exit")        
+    
+    def get_name(self):
+        return self.name
+
+    def get_card_no(self):
+        return self.card_no
+
+    def get_balance(self):
+        return self.balance
+
+    def get_pin(self):
+        return self.pin
+
+    
+
+
+    
+    def withdraw(self):
+        while True:
+            try:
+                ammount = float(input("Enter the ammount you would like to withdraw: "))
+                if ammount <= self.balance:
+                    print("Withdrawing Cash. Please Wait A Moment")
+                    time.sleep(5)
+                    self.balance -= ammount
+                    self.trans_history += f"Withdrawal: {ammount}     Balance: {self.balance}\n"
+                    print(f"Sucessesfully Withdrawed {ammount}Rs\nYour Current Balance Is {self.balance}")
+                    return self.balance
+                else:
+                    print("Insufficient Funds!")
+            except:
+                print("Please Enter Ammount In Numbers")
+            
+
+    def deposit(self):
+        ammount = float(input("Enter the ammount you would deposite: "))
+        print("Depositing Cash. Please Wait A Moment")
+        time.sleep(5)
+        self.balance += ammount
+        self.trans_history += f"Deposite: {ammount}     Balance: {self.balance}\n"
+        print(f"Sucessesfully Deposited {ammount}Rs\nYour Current Balance Is {self.balance}")
+        return self.balance
+    def transfer(self):
+        account =  int(input("Enter The Account Number You Would Like To Transfer Cash: "))
+        ammount = float(input("Enter The Amount You Would Like To Transfer: "))
+        if ammount > self.balance:
+            print("Insufficient Funds!")
+            
+        else:
+            print("Transfer In Progress. Please Wait A Moment")
+            time.sleep(5)
+            self.balance -= ammount
+            print(f"{ammount}Rs Has Been Transfer to Account Number {account}\nYour Current Balance Is {self.balance}")
+            self.trans_history += f"Transfer: {ammount}     Balance: {self.balance}\n"    
+            return self.balance
+    def transaction_history(self):
+        print("Getting The Transaction History Please Wait")
+        time.sleep(5)
+        print(self.trans_history)    
+class Account(ATM):
+    
+    
+    #Getting information about the account
+    
+                
+
+    # TO SHOW THE INFORMATION OF THE ACCOUNT
+    def show_info(self):
+        
+        print(f"Card Number: {self.get_card_no()}\nPin Code: {self.get_pin()}\nAccount Name: {self.get_name()}\nBalance: {self.get_balance()}Rs")
+
+    #CHANGE PIN CODE OF ACCOUNT
+    def change_pin(self):
+        no_of_tries = 1
+        while no_of_tries < 4:
+            no_of_tries += 1
+            pin_code = int(input("Enter Your Pin Code(Defaul is 1111) "))
+            if pin_code == self.pin:
+                self.pin = int(input("Enter Your New Pin Code: "))
+                print(f"Your New Pin Code is {self.pin}")
+                return self.pin
+                
+            else:
+                print("Incorrect Pin Code!\nTry again!")
+                continue
+        if no_of_tries == 3:
+            print("You Have Exceeded Your Attempts To Change Your Pin Code\nPlease Try Again Later ")
+
+        
+#x = ATM()
+#x.get_user()
+#x.get_pin_code()
+#x.show_info()
+            
+#y = ATM("Shahmir Amir",0000,123456,100000)
+#y.withdraw()
+#y.deposit()
+#y.transfer()
+#y.transaction_history()
+
+def start_atm(name,pin,card_no,balance):
+   
+    y = Account(name,pin,card_no,balance)
+    y.get_user()
+    y.get_pin_code()
+    while True:
+        print(f"WELCOME TO XYZ BANK MR.{name}")
+        
+        while True:
+            try:
+                y.prompt()
+                usr_input = int(input("Enter Any Number From 1-8: "))
+                if usr_input == 1:
+                    y.withdraw()
+                    continue
+                elif usr_input == 2:
+                    y.deposit()
+                    continue
+                elif usr_input == 3:
+                    y.transfer()
+                    continue
+                elif usr_input == 4:
+                    y.transaction_history()
+                    continue
+                elif usr_input == 5:
+                    print(f"Your Balnce is: Rs{y.get_balance()}")
+                    continue
+                elif usr_input == 6:
+                    y.show_info()
+                    continue
+                elif usr_input == 7:
+                    y.change_pin()
+                    continue
+                elif usr_input == 8:
+                    print("Thank You For Your Time\nHave A Nice Day :)")
+                    print("Exiting...")
+                    time.sleep(5)
+                    sys.exit()
+                else:
+                    print("Please Select A Number Between 1-8")           
+            except  KeyboardInterrupt:
+                print("Invalid Input! Try Again")
+                continue
+            except ValueError:
+                print("You Have Entered An Alphabet. Please Enter A Number Between 1-8")
+
+start_atm("Shahmir Amir",1111,123456789,450000)
